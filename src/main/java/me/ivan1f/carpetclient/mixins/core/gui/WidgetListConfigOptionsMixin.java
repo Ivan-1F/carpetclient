@@ -13,19 +13,23 @@ import fi.dy.masa.malilib.hotkeys.IHotkey;
 import fi.dy.masa.malilib.hotkeys.IKeybind;
 import fi.dy.masa.malilib.hotkeys.KeybindMulti;
 import me.ivan1f.carpetclient.gui.CarpetClientConfigGui;
+import me.ivan1f.carpetclient.gui.CarpetClientOptionLabel;
 import me.ivan1f.carpetclient.gui.HotkeyedBooleanResetListener;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
+
+import java.util.function.Function;
 
 @Mixin(WidgetConfigOption.class)
 public abstract class WidgetListConfigOptionsMixin extends WidgetConfigOptionBase<GuiConfigsBase.ConfigOptionWrapper> {
-    @Shadow
+    @Shadow(remap = false)
     @Final
     protected IKeybindConfigGui host;
 
@@ -68,6 +72,34 @@ public abstract class WidgetListConfigOptionsMixin extends WidgetConfigOptionBas
             if (modified) {
                 ci.cancel();
             }
+        }
+    }
+
+    @ModifyArgs(
+            method = "addConfigOption",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lfi/dy/masa/malilib/gui/widgets/WidgetConfigOption;addLabel(IIIII[Ljava/lang/String;)V",
+                    remap = false
+            ),
+            remap = false
+    )
+    private void useMyBetterOptionLabelForTweakerMore(Args args, int x_, int y_, float zLevel, int labelWidth, int configWidth, IConfigBase config) {
+        if (isCarpetClientConfigGui()) {
+            int x = args.get(0);
+            int y = args.get(1);
+            int width = args.get(2);
+            int height = args.get(3);
+            int textColor = args.get(4);
+            String[] lines = args.get(5);
+            if (lines.length != 1) {
+                return;
+            }
+
+            args.set(5, null);  // cancel original call
+
+            CarpetClientOptionLabel label = new CarpetClientOptionLabel(x, y, width, height, textColor, config.getName(), lines);
+            this.addWidget(label);
         }
     }
 

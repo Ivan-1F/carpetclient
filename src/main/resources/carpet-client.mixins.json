@@ -6,6 +6,7 @@
   "mixins": [
     "ClientPlayNetworkHandlerMixin",
     "MinecraftClientMixin",
+    "core.gui.WidgetLabelMixin",
     "core.gui.WidgetListConfigOptionsAccessor",
     "core.gui.WidgetListConfigOptionsMixin"
   ],
