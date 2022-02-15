@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "me.ivan1f.carpetclient.mixins",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "ClientPlayNetworkHandlerMixin",
+    "MinecraftClientMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
