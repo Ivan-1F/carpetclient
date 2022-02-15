@@ -11,6 +11,7 @@ import me.ivan1f.carpetclient.gui.CarpetClientConfigGui;
 
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class CarpetClientConfigs {
@@ -23,9 +24,25 @@ public class CarpetClientConfigs {
         OPEN_CARPETCLIENT_CONFIG_GUI.getKeybind().setCallback(CarpetClientConfigGui::onOpenGuiHotkey);
     }
 
-    private static final List<CarpetClientOption> OPTIONS = Lists.newArrayList();
-    private static final Set<String> CATEGORIES = Sets.newHashSet(CARPET_CLIENT);
+    private static List<CarpetClientOption> OPTIONS = Lists.newArrayList();
+    private static Set<String> CATEGORIES = Sets.newHashSet(CARPET_CLIENT);
     private static final Map<String, List<CarpetClientOption>> CATEGORY_TO_OPTION = Maps.newLinkedHashMap();
+
+    public static void clearCarpetRules() {
+        OPTIONS = OPTIONS.stream().filter(CarpetClientConfigs::isCarpetClientSetting).collect(Collectors.toList());
+        CATEGORIES = Sets.newHashSet(CARPET_CLIENT);
+        CATEGORY_TO_OPTION.clear();
+        OPTIONS.forEach(option -> {
+            for (String category : option.getCategories()) {
+                addCategory(category);
+                CATEGORY_TO_OPTION.computeIfAbsent(category, k -> Lists.newArrayList()).add(option);
+            }
+        });
+    }
+
+    private static boolean isCarpetClientSetting(CarpetClientOption option) {
+        return Arrays.asList(option.getCategories()).contains(CARPET_CLIENT);
+    }
 
     public static Set<String> getCategories() {
         return CATEGORIES;
