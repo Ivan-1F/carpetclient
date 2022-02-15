@@ -5,7 +5,9 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "ClientPlayNetworkHandlerMixin",
-    "MinecraftClientMixin"
+    "MinecraftClientMixin",
+    "core.gui.WidgetListConfigOptionsAccessor",
+    "core.gui.WidgetListConfigOptionsMixin"
   ],
   "client": [
   ],
