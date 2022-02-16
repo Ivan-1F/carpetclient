@@ -11,6 +11,10 @@
   "carpetclient.gui.config_category.carpet_client": "CarpetClient Settings",
 
   "carpetclient.gui.carpet_rules_not_loaded.text": "Carpet rules are not loaded",
+
+  "carpetclient.gui.previous.hover": "Previous",
+  "carpetclient.gui.previous.next": "Next",
+
   "carpetclient.gui.trigger_button.text": "Trigger",
   "carpetclient.gui.trigger_button.hover": "Click to trigger %1$s once\n§7§oThis will simulate hotkey pressed and released in order§r"
 }

@@ -40,7 +40,7 @@ dependencies {
     modImplementation("fi.dy.masa.malilib:${project.malilib_version}") {
         exclude group: 'io.github.prospector', module: 'modmenu'
     }
-    modImplementation "curse.maven:tweakermore-531235:${project.tweakermore_file_id}"
+//    modImplementation "curse.maven:tweakermore-531235:${project.tweakermore_file_id}"
 }
 
 processResources {
