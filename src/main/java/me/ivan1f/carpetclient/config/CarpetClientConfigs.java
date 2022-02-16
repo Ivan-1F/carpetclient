@@ -27,6 +27,7 @@ public class CarpetClientConfigs {
     private static List<CarpetClientOption> OPTIONS = Lists.newArrayList();
     private static Set<String> CATEGORIES = Sets.newHashSet(CARPET_CLIENT);
     private static final Map<String, List<CarpetClientOption>> CATEGORY_TO_OPTION = Maps.newLinkedHashMap();
+    private static final Map<IConfigBase, CarpetClientOption> CONFIG_TO_OPTION = Maps.newLinkedHashMap();
 
     public static void clearCarpetRules() {
         OPTIONS = OPTIONS.stream().filter(CarpetClientConfigs::isCarpetClientSetting).collect(Collectors.toList());
@@ -38,6 +39,8 @@ public class CarpetClientConfigs {
                 CATEGORY_TO_OPTION.computeIfAbsent(category, k -> Lists.newArrayList()).add(option);
             }
         });
+        CONFIG_TO_OPTION.clear();
+        OPTIONS.forEach(option -> CONFIG_TO_OPTION.put(option.getOption(), option));
     }
 
     private static boolean isCarpetClientSetting(CarpetClientOption option) {
@@ -57,6 +60,7 @@ public class CarpetClientConfigs {
         for (String category : rule.getCategories()) {
             addCategory(category);
             CATEGORY_TO_OPTION.computeIfAbsent(category, k -> Lists.newArrayList()).add(rule);
+            CONFIG_TO_OPTION.put(rule.getOption(), rule);
         }
     }
 
@@ -70,6 +74,14 @@ public class CarpetClientConfigs {
 
     public static Stream<CarpetClientOption> getAllOptionStream() {
         return OPTIONS.stream();
+    }
+
+    public static Optional<CarpetClientOption> getOptionFromConfig(IConfigBase iConfigBase) {
+        return Optional.ofNullable(CONFIG_TO_OPTION.get(iConfigBase));
+    }
+
+    public static boolean hasConfig(IConfigBase iConfigBase) {
+        return getOptionFromConfig(iConfigBase).isPresent();
     }
 
     static {
