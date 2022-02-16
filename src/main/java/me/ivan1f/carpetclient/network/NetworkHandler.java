@@ -21,7 +21,7 @@ public class NetworkHandler {
     public static boolean onCustomPayload(Identifier channel, PacketByteBuf data) {
         boolean handled = true;
         if (Identifiers.HI.equals(channel)) {
-            MinecraftClientUtil.sendPacket(new CustomPayloadC2SPacket(Identifiers.HELLO, new PacketByteBuf(Unpooled.buffer())));
+            requestCarpetRules();
         } else if (Identifiers.CARPET_RULES.equals(channel)) {
             onCarpetRules(data);
         } else if (Identifiers.VALUE_CHANGED.equals(channel)) {
@@ -31,6 +31,10 @@ public class NetworkHandler {
             handled = false;
         }
         return handled;
+    }
+
+    public static void requestCarpetRules() {
+        MinecraftClientUtil.sendPacket(new CustomPayloadC2SPacket(Identifiers.HELLO, new PacketByteBuf(Unpooled.buffer())));
     }
 
     private static void onCarpetRules(PacketByteBuf data) {

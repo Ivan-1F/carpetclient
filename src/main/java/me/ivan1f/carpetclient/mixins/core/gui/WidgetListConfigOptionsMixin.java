@@ -10,10 +10,8 @@ import fi.dy.masa.malilib.gui.button.ConfigButtonBoolean;
 import fi.dy.masa.malilib.gui.button.ConfigButtonKeybind;
 import fi.dy.masa.malilib.gui.interfaces.IKeybindConfigGui;
 import fi.dy.masa.malilib.gui.widgets.*;
-import fi.dy.masa.malilib.hotkeys.IHotkey;
-import fi.dy.masa.malilib.hotkeys.IKeybind;
-import fi.dy.masa.malilib.hotkeys.KeybindMulti;
-import fi.dy.masa.malilib.hotkeys.KeybindSettings;
+import fi.dy.masa.malilib.hotkeys.*;
+import fi.dy.masa.malilib.util.StringUtils;
 import me.ivan1f.carpetclient.config.CarpetClientConfigs;
 import me.ivan1f.carpetclient.gui.CarpetClientConfigGui;
 import me.ivan1f.carpetclient.gui.CarpetClientOptionLabel;
@@ -45,6 +43,9 @@ public abstract class WidgetListConfigOptionsMixin extends WidgetConfigOptionBas
     @Final
     @Nullable
     protected KeybindSettings initialKeybindSettings;
+
+    @Shadow
+    protected abstract void addKeybindResetButton(int x, int y, IKeybind keybind, ConfigButtonKeybind buttonHotkey);
 
     @Unique
     private boolean initialBoolean;
@@ -93,11 +94,13 @@ public abstract class WidgetListConfigOptionsMixin extends WidgetConfigOptionBas
             remap = false,
             cancellable = true
     )
-    private void tweakerMoreCustomConfigGui(int x, int y, float zLevel, int labelWidth, int configWidth, IConfigBase config, CallbackInfo ci) {
+    private void carpetClientCustomConfigGui(int x, int y, float zLevel, int labelWidth, int configWidth, IConfigBase config, CallbackInfo ci) {
         if (this.isCarpetClientConfigGui() && config instanceof IHotkey) {
             boolean modified = true;
             if (config instanceof IHotkeyTogglable) {
                 this.addBooleanAndHotkeyWidgets(x, y, configWidth, (IHotkeyTogglable) config);
+            } else if (((IHotkey) config).getKeybind() instanceof KeybindMulti) {
+                this.addButtonAndHotkeyWidgets(x, y, configWidth, (IHotkey)config);
             } else {
                 modified = false;
             }
@@ -116,7 +119,7 @@ public abstract class WidgetListConfigOptionsMixin extends WidgetConfigOptionBas
             ),
             remap = false
     )
-    private void useMyBetterOptionLabelForTweakerMore(Args args, int x_, int y_, float zLevel, int labelWidth, int configWidth, IConfigBase config) {
+    private void useMyBetterOptionLabelForCarpetClient(Args args, int x_, int y_, float zLevel, int labelWidth, int configWidth, IConfigBase config) {
         if (isCarpetClientConfigGui()) {
             int x = args.get(0);
             int y = args.get(1);
@@ -161,6 +164,39 @@ public abstract class WidgetListConfigOptionsMixin extends WidgetConfigOptionBas
                             !Objects.equals(this.initialKeybindSettings, keybind.getSettings())
             );
         }
+    }
+
+    private void addButtonAndHotkeyWidgets(int x, int y, int configWidth, IHotkey config) {
+        IKeybind keybind = config.getKeybind();
+
+        int triggerBtnWidth = 60;
+        ButtonGeneric triggerButton = new ButtonGeneric(
+                x, y, triggerBtnWidth, 20,
+                StringUtils.translate("carpetclient.gui.trigger_button.text"),
+                StringUtils.translate("carpetclient.gui.trigger_button.hover", config.getName())
+        );
+        IHotkeyCallback callback = ((KeybindMultiAccessor) keybind).getCallback();
+        this.addButton(triggerButton, (button, mouseButton) -> {
+            KeyAction activateOn = keybind.getSettings().getActivateOn();
+            if (activateOn == KeyAction.BOTH || activateOn == KeyAction.PRESS) {
+                callback.onKeyAction(KeyAction.PRESS, keybind);
+            }
+            if (activateOn == KeyAction.BOTH || activateOn == KeyAction.RELEASE) {
+                callback.onKeyAction(KeyAction.RELEASE, keybind);
+            }
+        });
+
+        x += triggerBtnWidth + 2;
+        configWidth -= triggerBtnWidth + 2 + 22;
+
+        ConfigButtonKeybind keybindButton = new ConfigButtonKeybind(x, y, configWidth, 20, keybind, this.host);
+        x += configWidth + 2;
+
+        this.addWidget(new WidgetKeybindSettings(x, y, 20, 20, keybind, config.getName(), this.parent, this.host.getDialogHandler()));
+        x += 24;
+
+        this.addButton(keybindButton, this.host.getButtonPressListener());
+        this.addKeybindResetButton(x, y, keybind, keybindButton);
     }
 
     private void addBooleanAndHotkeyWidgets(int x, int y, int configWidth, IHotkeyTogglable config) {

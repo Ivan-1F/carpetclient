@@ -1,8 +1,15 @@
 {
-  "carpetclient.config.openCarpetClientConfigGui": "openTweakerMoreConfigGui",
+  "carpetclient.config.openCarpetClientConfigGui": "openCarpetClientConfigGui",
   "carpetclient.config.openCarpetClientConfigGui.comment": "Open the config GUI of CarpetClient",
+
+  "carpetclient.config.refreshCarpetRules": "refreshCarpetRules",
+  "carpetclient.config.refreshCarpetRules.comment": "Manually refresh carpet rules from the server",
+  "carpetclient.config.refreshCarpetRules.refreshed": "Carpet rules refreshed! Please reopen the GUI to see the changes",
 
   "carpetclient.hotkeys.category.main": "CarpetClient",
   "carpetclient.gui.title": "CarpetClient v%1$s Config GUI",
-  "carpetclient.gui.config_category.carpet_client": "CarpetClient Settings"
+  "carpetclient.gui.config_category.carpet_client": "CarpetClient Settings",
+
+  "carpetclient.gui.trigger_button.text": "Trigger",
+  "carpetclient.gui.trigger_button.hover": "Click to trigger %1$s once\n§7§oThis will simulate hotkey pressed and released in order§r"
 }

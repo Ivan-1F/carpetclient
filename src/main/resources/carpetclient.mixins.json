@@ -9,6 +9,7 @@
     "ConfigStringAccessor",
     "MinecraftClientMixin",
     "core.gui.GuiBaseMixin",
+    "core.gui.KeybindMultiAccessor",
     "core.gui.WidgetLabelMixin",
     "core.gui.WidgetListConfigOptionsAccessor",
     "core.gui.WidgetListConfigOptionsMixin"

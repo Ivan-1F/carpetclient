@@ -2,7 +2,14 @@
   "carpetclient.config.openCarpetClientConfigGui": "打开 CarpetClient 配置界面",
   "carpetclient.config.openCarpetClientConfigGui.comment": "打开 CarpetClient 的配置界面",
 
+  "carpetclient.config.refreshCarpetRules": "刷新 Carpet 规则",
+  "carpetclient.config.refreshCarpetRules.comment": "手动从服务器刷新 Carpet 规则",
+  "carpetclient.config.refreshCarpetRules.refreshed": "Carpet 规则已刷新！请重新打开 GUI 以查看更改",
+
   "carpetclient.hotkeys.category.main": "CarpetClient",
   "carpetclient.gui.title": "CarpetClient v%1$s 配置界面",
-  "carpetclient.gui.config_category.carpet_client": "CarpetClient 设置"
+  "carpetclient.gui.config_category.carpet_client": "CarpetClient 设置",
+
+  "carpetclient.gui.trigger_button.text": "触发",
+  "carpetclient.gui.trigger_button.hover": "点击以触发一次 %1$s\n§7§o这将依次模拟热键按下与松开操作§r"
 }

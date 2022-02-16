@@ -5,9 +5,11 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import fi.dy.masa.malilib.config.IConfigBase;
 import fi.dy.masa.malilib.config.options.ConfigHotkey;
+import fi.dy.masa.malilib.util.InfoUtils;
 import me.ivan1f.carpetclient.CarpetClientMod;
 import me.ivan1f.carpetclient.config.option.CarpetClientConfigHotkey;
 import me.ivan1f.carpetclient.gui.CarpetClientConfigGui;
+import me.ivan1f.carpetclient.network.NetworkHandler;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -20,8 +22,17 @@ public class CarpetClientConfigs {
     @Config(categories = {CARPET_CLIENT})
     public static final ConfigHotkey OPEN_CARPETCLIENT_CONFIG_GUI = new CarpetClientConfigHotkey("openCarpetClientConfigGui", "R,C");
 
+    @Config(categories = {CARPET_CLIENT})
+    public static final ConfigHotkey REFRESH_CARPET_RULES = new CarpetClientConfigHotkey("refreshCarpetRules", "");
+
     public static void initializeCallbacks() {
         OPEN_CARPETCLIENT_CONFIG_GUI.getKeybind().setCallback(CarpetClientConfigGui::onOpenGuiHotkey);
+        REFRESH_CARPET_RULES.getKeybind().setCallback((action, keybind) -> {
+            clearCarpetRules();
+            NetworkHandler.requestCarpetRules();
+            InfoUtils.printActionbarMessage("carpetclient.config.refreshCarpetRules.refreshed");
+            return true;
+        });
     }
 
     private static List<CarpetClientOption> OPTIONS = Lists.newArrayList();
