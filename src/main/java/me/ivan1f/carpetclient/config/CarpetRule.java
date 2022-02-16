@@ -1,13 +1,18 @@
 package me.ivan1f.carpetclient.config;
 
 import fi.dy.masa.malilib.config.IConfigBase;
+import fi.dy.masa.malilib.config.options.ConfigBooleanHotkeyed;
+import fi.dy.masa.malilib.config.options.ConfigString;
 import me.ivan1f.carpetclient.config.option.carpet.CarpetRuleConfigBooleanHotkeyed;
 import me.ivan1f.carpetclient.config.option.carpet.CarpetRuleConfigString;
 import me.ivan1f.carpetclient.util.MinecraftClientUtil;
 
 public class CarpetRule extends CarpetClientOption {
+    private final String type;
+
     public CarpetRule(String[] categories, String name, String translatedName, String description, String type, String defaultValue, String value) {
         super(categories, CarpetRule.parseCarpetRule(name, translatedName, description, type, defaultValue, value));
+        this.type = type;
     }
 
     private static IConfigBase parseCarpetRule(String name, String translatedName, String description, String type, String defaultValue, String value) {
@@ -21,6 +26,14 @@ public class CarpetRule extends CarpetClientOption {
             config.setValueFromString(value);
             config.setValueChangeCallback((newValue) -> MinecraftClientUtil.modifyCarpetRule(name, config.getStringValue()));
             return config;
+        }
+    }
+
+    public void set(String value) {
+        if (this.type.equals("boolean")) {
+            ((ConfigBooleanHotkeyed) this.getOption()).setBooleanValue(Boolean.parseBoolean(value));
+        } else {
+            ((ConfigString) this.getOption()).setValueFromString(value);
         }
     }
 }

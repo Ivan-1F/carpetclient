@@ -68,6 +68,10 @@ public class CarpetClientConfigs {
         return OPTIONS.stream().map(CarpetClientOption::getOption);
     }
 
+    public static Stream<CarpetClientOption> getAllOptionStream() {
+        return OPTIONS.stream();
+    }
+
     static {
         for (Field field : CarpetClientConfigs.class.getDeclaredFields()) {
             Config annotation = field.getAnnotation(Config.class);
