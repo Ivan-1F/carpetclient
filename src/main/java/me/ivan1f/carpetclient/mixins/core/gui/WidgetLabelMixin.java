@@ -1,6 +1,6 @@
 package me.ivan1f.carpetclient.mixins.core.gui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.platform.GlStateManager;
 import fi.dy.masa.malilib.gui.widgets.WidgetBase;
 import fi.dy.masa.malilib.gui.widgets.WidgetLabel;
 import me.ivan1f.carpetclient.gui.CarpetClientOptionLabel;
@@ -72,8 +72,8 @@ public class WidgetLabelMixin extends WidgetBase {
             int x = this.x + (this.centered ? this.width / 2 : 0);
             int y = (int) (yTextStart + (this.labels.size() + i * scale + 0.2) * fontHeight);
 
-            RenderSystem.pushMatrix();
-            RenderSystem.scaled(scale, scale, 1);
+            GlStateManager.pushMatrix();
+            GlStateManager.scaled(scale, scale, 1);
             x /= scale;
             y /= scale;
 
@@ -82,7 +82,7 @@ public class WidgetLabelMixin extends WidgetBase {
             } else {
                 this.drawStringWithShadow(x, y, color, ((CarpetClientOptionLabel) (Object) this).name);
             }
-            RenderSystem.popMatrix();
+            GlStateManager.popMatrix();
         }
     }
 
