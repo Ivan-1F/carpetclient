@@ -1,32 +1,24 @@
 package me.ivan1f.carpetclient.mixins.core.gui;
 
 import fi.dy.masa.malilib.config.IConfigBase;
-import fi.dy.masa.malilib.config.IHotkeyTogglable;
-import fi.dy.masa.malilib.config.gui.ConfigOptionChangeListenerButton;
-import fi.dy.masa.malilib.config.options.ConfigBooleanHotkeyed;
 import fi.dy.masa.malilib.gui.GuiConfigsBase;
 import fi.dy.masa.malilib.gui.button.ButtonGeneric;
-import fi.dy.masa.malilib.gui.button.ConfigButtonBoolean;
 import fi.dy.masa.malilib.gui.button.ConfigButtonKeybind;
 import fi.dy.masa.malilib.gui.interfaces.IKeybindConfigGui;
 import fi.dy.masa.malilib.gui.widgets.*;
 import fi.dy.masa.malilib.hotkeys.*;
 import fi.dy.masa.malilib.util.StringUtils;
-import me.ivan1f.carpetclient.config.CarpetClientConfigs;
 import me.ivan1f.carpetclient.gui.CarpetClientConfigGui;
 import me.ivan1f.carpetclient.gui.CarpetClientOptionLabel;
-import me.ivan1f.carpetclient.gui.HotkeyedBooleanResetListener;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 import javax.annotation.Nullable;
-import java.util.Objects;
 
 @Mixin(WidgetConfigOption.class)
 public abstract class WidgetListConfigOptionsMixin extends WidgetConfigOptionBase<GuiConfigsBase.ConfigOptionWrapper> {
@@ -54,22 +46,6 @@ public abstract class WidgetListConfigOptionsMixin extends WidgetConfigOptionBas
         super(x, y, width, height, parent, entry, listIndex);
     }
 
-    /**
-     * Stolen from malilib 1.18 v0.11.4
-     * to make compact ConfigBooleanHotkeyed option panel works
-     */
-    @Inject(method = "<init>", at = @At("TAIL"), remap = false)
-    private void initInitialState(CallbackInfo ci) {
-        if (isCarpetClientConfigGui() && this.wrapper.getType() == GuiConfigsBase.ConfigOptionWrapper.Type.CONFIG) {
-            IConfigBase config = wrapper.getConfig();
-            if (config instanceof ConfigBooleanHotkeyed) {
-                this.initialBoolean = ((ConfigBooleanHotkeyed) config).getBooleanValue();
-                this.initialStringValue = ((ConfigBooleanHotkeyed) config).getKeybind().getStringValue();
-                this.initialKeybindSettings = ((ConfigBooleanHotkeyed) config).getKeybind().getSettings();
-            }
-        }
-    }
-
     @ModifyVariable(
             method = "addConfigOption",
             at = @At("HEAD"),
@@ -85,26 +61,15 @@ public abstract class WidgetListConfigOptionsMixin extends WidgetConfigOptionBas
     }
 
     @Inject(
-            method = "addConfigOption",
-            at = @At(
-                    value = "FIELD",
-                    target = "Lfi/dy/masa/malilib/config/ConfigType;BOOLEAN:Lfi/dy/masa/malilib/config/ConfigType;",
-                    remap = false
-            ),
+            method = "addHotkeyConfigElements",
+            at = @At(value = "HEAD"),
             remap = false,
             cancellable = true
     )
-    private void carpetClientCustomConfigGui(int x, int y, float zLevel, int labelWidth, int configWidth, IConfigBase config, CallbackInfo ci) {
-        if (this.isCarpetClientConfigGui() && config instanceof IHotkey) {
-            boolean modified = true;
-            if (config instanceof IHotkeyTogglable) {
-                this.addBooleanAndHotkeyWidgets(x, y, configWidth, (IHotkeyTogglable) config);
-            } else if (((IHotkey) config).getKeybind() instanceof KeybindMulti) {
-                this.addButtonAndHotkeyWidgets(x, y, configWidth, (IHotkey)config);
-            } else {
-                modified = false;
-            }
-            if (modified) {
+    private void carpetClientCustomConfigGui(int x, int y, int configWidth, String configName, IHotkey config, CallbackInfo ci) {
+        if (this.isCarpetClientConfigGui()) {
+            if ((config).getKeybind() instanceof KeybindMulti) {
+                this.addButtonAndHotkeyWidgets(x, y, configWidth, config);
                 ci.cancel();
             }
         }
@@ -135,34 +100,6 @@ public abstract class WidgetListConfigOptionsMixin extends WidgetConfigOptionBas
 
             CarpetClientOptionLabel label = new CarpetClientOptionLabel(x, y, width, height, textColor, config.getName(), lines);
             this.addWidget(label);
-        }
-    }
-
-    /**
-     * Stolen from malilib 1.18 v0.11.4
-     * to make compact ConfigBooleanHotkeyed option panel works
-     */
-    @Inject(
-            method = "wasConfigModified",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lfi/dy/masa/malilib/gui/GuiConfigsBase$ConfigOptionWrapper;getConfig()Lfi/dy/masa/malilib/config/IConfigBase;",
-                    ordinal = 0,
-                    remap = false
-            ),
-            cancellable = true,
-            remap = false
-    )
-    private void specialJudgeCustomConfigBooleanHotkeyed(CallbackInfoReturnable<Boolean> cir) {
-        IConfigBase config = this.wrapper.getConfig();
-        if (config instanceof ConfigBooleanHotkeyed && CarpetClientConfigs.hasConfig(config)) {
-            ConfigBooleanHotkeyed booleanHotkey = (ConfigBooleanHotkeyed) config;
-            IKeybind keybind = booleanHotkey.getKeybind();
-            cir.setReturnValue(
-                    this.initialBoolean != booleanHotkey.getBooleanValue() ||
-                            !Objects.equals(this.initialStringValue, keybind.getStringValue()) ||
-                            !Objects.equals(this.initialKeybindSettings, keybind.getSettings())
-            );
         }
     }
 
@@ -197,32 +134,6 @@ public abstract class WidgetListConfigOptionsMixin extends WidgetConfigOptionBas
 
         this.addButton(keybindButton, this.host.getButtonPressListener());
         this.addKeybindResetButton(x, y, keybind, keybindButton);
-    }
-
-    private void addBooleanAndHotkeyWidgets(int x, int y, int configWidth, IHotkeyTogglable config) {
-        IKeybind keybind = config.getKeybind();
-
-        int booleanBtnWidth = 60;
-        ConfigButtonBoolean booleanButton = new ConfigButtonBoolean(x, y, booleanBtnWidth, 20, config);
-        x += booleanBtnWidth + 2;
-        configWidth -= booleanBtnWidth + 2 + 22;
-
-        ConfigButtonKeybind keybindButton = new ConfigButtonKeybind(x, y, configWidth, 20, keybind, this.host);
-        x += configWidth + 2;
-
-        this.addWidget(new WidgetKeybindSettings(x, y, 20, 20, keybind, config.getName(), this.parent, this.host.getDialogHandler()));
-        x += 24;
-
-        ButtonGeneric resetButton = this.createResetButton(x, y, config);
-
-        ConfigOptionChangeListenerButton booleanChangeListener = new ConfigOptionChangeListenerButton(config, resetButton, null);
-        HotkeyedBooleanResetListener resetListener = new HotkeyedBooleanResetListener(config, booleanButton, keybindButton, resetButton, this.host);
-
-        this.host.addKeybindChangeListener(resetListener);
-
-        this.addButton(booleanButton, booleanChangeListener);
-        this.addButton(keybindButton, this.host.getButtonPressListener());
-        this.addButton(resetButton, resetListener);
     }
 
     private boolean isCarpetClientConfigGui() {
