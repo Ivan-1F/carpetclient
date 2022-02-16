@@ -10,6 +10,7 @@ import fi.dy.masa.malilib.util.StringUtils;
 import me.ivan1f.carpetclient.CarpetClientMod;
 import me.ivan1f.carpetclient.config.CarpetClientConfigs;
 import me.ivan1f.carpetclient.config.CarpetClientOption;
+import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -87,5 +88,13 @@ public class CarpetClientConfigGui extends GuiConfigsBase {
                 sorted((a, b) -> a.getName().compareToIgnoreCase(b.getName())).
                 collect(Collectors.toList());
         return ConfigOptionWrapper.createFor(options);
+    }
+
+    @Override
+    public void render(int mouseX, int mouseY, float partialTicks) {
+        super.render(mouseX, mouseY, partialTicks);
+        if (!CarpetClientConfigs.isCarpetRuleLoaded) {
+            drawRightAlignedString(this.mc.textRenderer, StringUtils.translate("carpetclient.gui.carpet_rules_not_loaded.text"), this.width - 12, 10, 0xAA0000);  // dark red
+        }
     }
 }

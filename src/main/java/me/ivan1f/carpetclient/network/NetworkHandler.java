@@ -55,6 +55,7 @@ public class NetworkHandler {
         }
         InputEventHandler.getKeybindManager().unregisterKeybindProvider(new KeybindProvider());
         InputEventHandler.getKeybindManager().registerKeybindProvider(new KeybindProvider());
+        CarpetClientConfigs.isCarpetRuleLoaded = true;
     }
 
     private static void onValueChanged(PacketByteBuf data) {

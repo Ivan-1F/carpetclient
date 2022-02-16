@@ -10,6 +10,7 @@
   "carpetclient.gui.title": "CarpetClient v%1$s 配置界面",
   "carpetclient.gui.config_category.carpet_client": "CarpetClient 设置",
 
+  "carpetclient.gui.carpet_rules_not_loaded.text": "Carpet 规则未加载",
   "carpetclient.gui.trigger_button.text": "触发",
   "carpetclient.gui.trigger_button.hover": "点击以触发一次 %1$s\n§7§o这将依次模拟热键按下与松开操作§r"
 }
