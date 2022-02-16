@@ -73,8 +73,8 @@ public class WidgetLabelMixin extends WidgetBase {
             int x = this.x + (this.centered ? this.width / 2 : 0);
             int y = (int) (yTextStart + (this.labels.size() + i * scale + 0.2) * fontHeight);
 
-            RenderSystem.pushMatrix();
-            RenderSystem.scaled(scale, scale, 1);
+            matrixStack.push();
+            matrixStack.scale((float)scale, (float)scale, 1);
             x /= scale;
             y /= scale;
 
@@ -83,7 +83,7 @@ public class WidgetLabelMixin extends WidgetBase {
             } else {
                 this.drawStringWithShadow(x, y, color, ((CarpetClientOptionLabel) (Object) this).name, matrixStack);
             }
-            RenderSystem.popMatrix();
+            matrixStack.pop();
         }
     }
 

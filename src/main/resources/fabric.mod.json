@@ -21,7 +21,7 @@
   ],
   "depends": {
     "fabricloader": ">=0.13.2",
-    "minecraft": "1.16.*",
+    "minecraft": "1.17.*",
     "malilib": "*"
   }
 }
