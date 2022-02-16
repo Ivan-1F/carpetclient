@@ -34,7 +34,7 @@ public abstract class WidgetListConfigOptionsMixin extends WidgetConfigOptionBas
     @Final
     protected IKeybindConfigGui host;
 
-    @Shadow
+    @Shadow(remap = false)
     @Final
     protected GuiConfigsBase.ConfigOptionWrapper wrapper;
 
@@ -44,7 +44,7 @@ public abstract class WidgetListConfigOptionsMixin extends WidgetConfigOptionBas
     @Nullable
     protected KeybindSettings initialKeybindSettings;
 
-    @Shadow
+    @Shadow(remap = false)
     protected abstract void addKeybindResetButton(int x, int y, IKeybind keybind, ConfigButtonKeybind buttonHotkey);
 
     @Unique
