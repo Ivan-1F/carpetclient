@@ -8,11 +8,11 @@ import me.ivan1f.carpetclient.config.CarpetClientConfigs;
 import me.ivan1f.carpetclient.config.CarpetRule;
 import me.ivan1f.carpetclient.config.KeybindProvider;
 import me.ivan1f.carpetclient.util.MinecraftClientUtil;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.PacketByteBuf;
+import net.minecraft.network.PacketByteBuf;
 
 import java.util.List;
 import java.util.Objects;
@@ -38,8 +38,8 @@ public class NetworkHandler {
     }
 
     private static void onCarpetRules(PacketByteBuf data) {
-        for (Tag tag : Objects.requireNonNull(data.readCompoundTag()).getList("rules", 10)) {
-            CompoundTag rule = (CompoundTag) tag;
+        for (NbtElement tag : Objects.requireNonNull(data.readNbt()).getList("rules", 10)) {
+            NbtCompound rule = (NbtCompound) tag;
             List<String> categories = Lists.newArrayList();
             rule.getList("categories", 8).forEach(category -> categories.add(category.asString()));
             CarpetRule carpetRule = new CarpetRule(
@@ -58,9 +58,9 @@ public class NetworkHandler {
     }
 
     private static void onValueChanged(PacketByteBuf data) {
-        CompoundTag compoundTag = Objects.requireNonNull(data.readCompoundTag());
-        String rule = compoundTag.getString("rule");
-        String newValue = compoundTag.getString("newValue");
+        NbtCompound NbtCompound = Objects.requireNonNull(data.readNbt());
+        String rule = NbtCompound.getString("rule");
+        String newValue = NbtCompound.getString("newValue");
         CarpetClientConfigs.getAllOptionStream().filter(config -> config.getOption().getName().equals(rule)).findAny().ifPresent(config -> {
             CarpetRule carpetRule = (CarpetRule) config;
             carpetRule.set(newValue);

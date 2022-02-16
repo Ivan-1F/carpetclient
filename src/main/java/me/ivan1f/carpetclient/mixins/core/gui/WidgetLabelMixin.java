@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import fi.dy.masa.malilib.gui.widgets.WidgetBase;
 import fi.dy.masa.malilib.gui.widgets.WidgetLabel;
 import me.ivan1f.carpetclient.gui.CarpetClientOptionLabel;
+import net.minecraft.client.util.math.MatrixStack;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -65,7 +66,7 @@ public class WidgetLabelMixin extends WidgetBase {
             remap = false,
             locals = LocalCapture.CAPTURE_FAILHARD
     )
-    private void translatedOptionLabelRenderTranslation(int mouseX, int mouseY, boolean selected, CallbackInfo ci, int fontHeight, int yCenter, int yTextStart, int i, String text) {
+    private void translatedOptionLabelRenderTranslation(int mouseX, int mouseY, boolean selected, MatrixStack matrixStack, CallbackInfo ci, int fontHeight, int yCenter, int yTextStart, int i, String text) {
         if (this.shouldUseTranslatedOptionLabelLogic()) {
             int color = darkerColor(this.textColor);
             double scale = CarpetClientOptionLabel.TRANSLATION_SCALE;
@@ -78,9 +79,9 @@ public class WidgetLabelMixin extends WidgetBase {
             y /= scale;
 
             if (this.centered) {
-                this.drawCenteredStringWithShadow(x, y, color, ((CarpetClientOptionLabel) (Object) this).name);
+                this.drawCenteredStringWithShadow(x, y, color, ((CarpetClientOptionLabel) (Object) this).name, matrixStack);
             } else {
-                this.drawStringWithShadow(x, y, color, ((CarpetClientOptionLabel) (Object) this).name);
+                this.drawStringWithShadow(x, y, color, ((CarpetClientOptionLabel) (Object) this).name, matrixStack);
             }
             RenderSystem.popMatrix();
         }
