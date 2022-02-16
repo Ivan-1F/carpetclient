@@ -6,6 +6,7 @@ import fi.dy.masa.malilib.gui.GuiConfigsBase;
 import fi.dy.masa.malilib.gui.button.ButtonGeneric;
 import fi.dy.masa.malilib.hotkeys.IKeybind;
 import fi.dy.masa.malilib.hotkeys.KeyAction;
+import fi.dy.masa.malilib.util.StringUtils;
 import me.ivan1f.carpetclient.CarpetClientMod;
 import me.ivan1f.carpetclient.config.CarpetClientConfigs;
 import me.ivan1f.carpetclient.config.CarpetClientOption;
@@ -53,7 +54,11 @@ public class CarpetClientConfigGui extends GuiConfigsBase {
     }
 
     private int createNavigationButton(int x, int y, String category) {
-        ButtonGeneric button = new ButtonGeneric(x, y, -1, 20, category);
+        String translatedCategory = category;
+        if (category.equals(CarpetClientConfigs.CARPET_CLIENT)) {
+            translatedCategory = StringUtils.translate("carpetclient.gui.config_category." + category);
+        }
+        ButtonGeneric button = new ButtonGeneric(x, y, -1, 20, translatedCategory);
         button.setEnabled(!CarpetClientConfigGui.category.equals(category));
         this.addButton(button, (b, mouseButton) -> {
             CarpetClientConfigGui.category = category;

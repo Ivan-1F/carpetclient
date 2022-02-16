@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "carpet-client",
+  "id": "carpetclient",
   "version": "${version}",
   "name": "Carpet Client",
   "description": "A client mod to control carpet rules easily",
@@ -9,7 +9,7 @@
   ],
   "contact": {},
   "license": "GPL-3.0",
-  "icon": "assets/carpet-client/icon.png",
+  "icon": "assets/carpetclient/icon.png",
   "environment": "client",
   "entrypoints": {
     "main": [
@@ -17,7 +17,7 @@
     ]
   },
   "mixins": [
-    "carpet-client.mixins.json"
+    "carpetclient.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.13.2",
