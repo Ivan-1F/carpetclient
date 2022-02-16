@@ -6,8 +6,8 @@ import me.ivan1f.carpetclient.config.CarpetClientIConfigBase;
 public class CarpetRuleConfigBooleanHotkeyed extends ConfigBooleanHotkeyed implements CarpetClientIConfigBase {
     private final String translatedName;
 
-    public CarpetRuleConfigBooleanHotkeyed(String name, String translatedName, String description, boolean defaultValue, String defaultHotkey) {
-        super(name, defaultValue, defaultHotkey, description, CARPETCLIENT_NAMESPACE_PREFIX + name + PRETTY_NAME_SUFFIX);
+    public CarpetRuleConfigBooleanHotkeyed(String name, String translatedName, String description, String prettyName, boolean defaultValue, String defaultHotkey) {
+        super(name, defaultValue, defaultHotkey, description, prettyName);
         this.translatedName = translatedName;
     }
 

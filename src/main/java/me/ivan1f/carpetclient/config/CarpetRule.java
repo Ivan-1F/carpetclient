@@ -18,7 +18,7 @@ public class CarpetRule extends CarpetClientOption {
 
     private static IConfigBase parseCarpetRule(String name, String translatedName, String description, String type, String defaultValue, String value) {
         if (type.equals("boolean")) {
-            CarpetRuleConfigBooleanHotkeyed config = new CarpetRuleConfigBooleanHotkeyed(name, translatedName, description, Boolean.parseBoolean(defaultValue), "");
+            CarpetRuleConfigBooleanHotkeyed config = new CarpetRuleConfigBooleanHotkeyed(name, translatedName, description, translatedName, Boolean.parseBoolean(defaultValue), "");
             config.setBooleanValue(Boolean.parseBoolean(value));
             config.setValueChangeCallback((newValue) -> MinecraftClientUtil.modifyCarpetRule(name, config.getStringValue()));
             return config;

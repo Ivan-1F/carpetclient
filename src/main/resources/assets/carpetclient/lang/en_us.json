@@ -1,6 +1,7 @@
 {
   "carpetclient.config.openCarpetClientConfigGui": "openTweakerMoreConfigGui",
   "carpetclient.config.openCarpetClientConfigGui.comment": "Open the config GUI of CarpetClient",
+
   "carpetclient.hotkeys.category.main": "CarpetClient",
   "carpetclient.gui.title": "CarpetClient v%1$s Config GUI",
   "carpetclient.gui.config_category.carpet_client": "CarpetClient Settings"
