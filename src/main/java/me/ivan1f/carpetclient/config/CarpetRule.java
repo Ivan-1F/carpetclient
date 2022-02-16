@@ -5,6 +5,7 @@ import fi.dy.masa.malilib.config.options.ConfigBooleanHotkeyed;
 import fi.dy.masa.malilib.config.options.ConfigString;
 import me.ivan1f.carpetclient.config.option.carpet.CarpetRuleConfigBooleanHotkeyed;
 import me.ivan1f.carpetclient.config.option.carpet.CarpetRuleConfigString;
+import me.ivan1f.carpetclient.util.ConfigUtil;
 import me.ivan1f.carpetclient.util.MinecraftClientUtil;
 
 public class CarpetRule extends CarpetClientOption {
@@ -29,11 +30,14 @@ public class CarpetRule extends CarpetClientOption {
         }
     }
 
+    // only used to set the value when the rule is updated on server side
+    // aka sync server values to client
+    // will not trigger valueChange callbacks, so it won't set the rule again
     public void set(String value) {
         if (this.type.equals("boolean")) {
-            ((ConfigBooleanHotkeyed) this.getOption()).setBooleanValue(Boolean.parseBoolean(value));
+            ConfigUtil.modifyConfigBooleanSilently(((ConfigBooleanHotkeyed) this.getOption()), Boolean.parseBoolean(value));
         } else {
-            ((ConfigString) this.getOption()).setValueFromString(value);
+            ConfigUtil.modifyConfigStringSilently(((ConfigString) this.getOption()), value);
         }
     }
 }
