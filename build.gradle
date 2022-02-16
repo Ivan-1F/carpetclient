@@ -1,9 +1,19 @@
 plugins {
-    id 'fabric-loom' version '0.10-SNAPSHOT'
+    id 'fabric-loom' version '0.11-SNAPSHOT'
     id 'maven-publish'
 }
 
-version = project.mod_version
+String versionSuffix = ''
+if (System.getenv("BUILD_RELEASE") != "true") {
+    versionSuffix += '-SHAPSHOT'
+}
+String buildNumber = System.getenv("BUILD_ID")
+if (buildNumber != null) {
+    versionSuffix += '+build.' + buildNumber
+}
+String fullModVersion = project.mod_version + versionSuffix
+
+version = 'mc' + project.minecraft_version + '-v' + fullModVersion
 group = project.maven_group
 
 repositories {
@@ -29,11 +39,10 @@ dependencies {
 }
 
 processResources {
-    inputs.property "version", project.version
-    filteringCharset "UTF-8"
+    inputs.property "version", fullModVersion
 
     filesMatching("fabric.mod.json") {
-        expand "version": project.version
+        expand "version": fullModVersion
     }
 }
 
