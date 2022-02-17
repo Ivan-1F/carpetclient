@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class CarpetClientConfigs {
+    public static boolean isCarpetRuleLoaded = false;
     public static final String CARPET_CLIENT = "carpet_client";
 
     @Config(categories = {CARPET_CLIENT})
@@ -52,6 +53,7 @@ public class CarpetClientConfigs {
         });
         CONFIG_TO_OPTION.clear();
         OPTIONS.forEach(option -> CONFIG_TO_OPTION.put(option.getOption(), option));
+        isCarpetRuleLoaded = false;
     }
 
     private static boolean isCarpetClientSetting(CarpetClientOption option) {
