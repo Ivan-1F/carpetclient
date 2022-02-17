@@ -1,5 +1,7 @@
 package me.ivan1f.carpetclient.gui;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import fi.dy.masa.malilib.config.IConfigBase;
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.gui.GuiConfigsBase;
@@ -10,6 +12,7 @@ import fi.dy.masa.malilib.util.StringUtils;
 import me.ivan1f.carpetclient.CarpetClientMod;
 import me.ivan1f.carpetclient.config.CarpetClientConfigs;
 import me.ivan1f.carpetclient.config.CarpetClientOption;
+import net.minecraft.client.util.math.MatrixStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -40,6 +43,27 @@ public class CarpetClientConfigGui extends GuiConfigsBase {
         return true;
     }
 
+    public static final Map<Integer, List<String>> PAGE_CATEGORY_MAP = Maps.newHashMap();
+    public static int currentPage = 1;
+    public static int maxPage = 0;
+
+    private void setupPages() {
+        PAGE_CATEGORY_MAP.clear();
+
+        int x = 10;
+        int page = 1;
+        for (String category : CarpetClientConfigs.getCategories()) {
+            if (x + this.getStringWidth(category) + 10 + 10 > this.width) {
+                page += 1;
+                x = 10;
+            }
+            x += this.getStringWidth(category) + 10 + 2;
+            PAGE_CATEGORY_MAP.computeIfAbsent(page, k -> Lists.newArrayList()).add(category);
+        }
+
+        maxPage = page;
+    }
+
     @Override
     public void initGui() {
         super.initGui();
@@ -48,8 +72,44 @@ public class CarpetClientConfigGui extends GuiConfigsBase {
         int x = 10;
         int y = 26;
 
-        for (String category : CarpetClientConfigs.getCategories()) {
+        this.setupPages();
+
+        for (String category : PAGE_CATEGORY_MAP.get(currentPage)) {
             x += this.createNavigationButton(x, y, category);
+        }
+
+        int titleBarX = this.getStringWidth(this.title);
+
+        titleBarX += 12 + 10;
+        ButtonGeneric previous = new ButtonGeneric(
+                titleBarX, 5, 20, 20, "<",
+                StringUtils.translate("carpetclient.gui.previous.hover"));
+        titleBarX += 20 + 2;
+        ButtonGeneric next = new ButtonGeneric(
+                titleBarX, 5, 20, 20, ">",
+                StringUtils.translate("carpetclient.gui.next.hover"));
+
+        if (currentPage == maxPage) next.setEnabled(false);
+        if (currentPage == 1) previous.setEnabled(false);
+        if (maxPage >= 2) {
+            this.addButton(next, (button, mouseButton) -> {
+                currentPage ++;
+                next.setEnabled(true);
+                previous.setEnabled(true);
+                if (currentPage == maxPage) next.setEnabled(false);
+                if (currentPage == 1) previous.setEnabled(false);
+                this.reDraw();
+                this.initGui();
+            });
+            this.addButton(previous, (button, mouseButton) -> {
+                currentPage --;
+                next.setEnabled(true);
+                previous.setEnabled(true);
+                if (currentPage == maxPage) next.setEnabled(false);
+                if (currentPage == 1) previous.setEnabled(false);
+                this.reDraw();
+                this.initGui();
+            });
         }
     }
 
@@ -87,5 +147,21 @@ public class CarpetClientConfigGui extends GuiConfigsBase {
                 sorted((a, b) -> a.getName().compareToIgnoreCase(b.getName())).
                 collect(Collectors.toList());
         return ConfigOptionWrapper.createFor(options);
+    }
+
+    // mojang </3
+    private void drawRightAlignedString(MatrixStack matrixStack, String text, int x, int y, int color) {
+        this.drawStringWithShadow(matrixStack, text, x - this.getStringWidth(text), y, color);
+    }
+
+    @Override
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        super.render(matrixStack, mouseX, mouseY, partialTicks);
+        if (!CarpetClientConfigs.isCarpetRuleLoaded) {
+            drawRightAlignedString(matrixStack, StringUtils.translate("carpetclient.gui.carpet_rules_not_loaded.text"), this.width - 12, 10, 0xAA0000);  // dark red
+        }
+        if (maxPage >= 2) {
+            this.drawStringWithShadow(matrixStack, String.format("%d / %d", currentPage, maxPage), this.getStringWidth(this.title) + 12 + 10 + 20 + 2 + 20 + 5, 12, COLOR_WHITE);
+        }
     }
 }
