@@ -12,6 +12,7 @@ import fi.dy.masa.malilib.util.StringUtils;
 import me.ivan1f.carpetclient.CarpetClientMod;
 import me.ivan1f.carpetclient.config.CarpetClientConfigs;
 import me.ivan1f.carpetclient.config.CarpetClientOption;
+import net.minecraft.client.util.math.MatrixStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -148,14 +149,19 @@ public class CarpetClientConfigGui extends GuiConfigsBase {
         return ConfigOptionWrapper.createFor(options);
     }
 
+    // mojang </3
+    private void drawRightAlignedString(MatrixStack matrixStack, String text, int x, int y, int color) {
+        this.drawStringWithShadow(matrixStack, text, x - this.getStringWidth(text), y, color);
+    }
+
     @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
-        super.render(mouseX, mouseY, partialTicks);
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        super.render(matrixStack, mouseX, mouseY, partialTicks);
         if (!CarpetClientConfigs.isCarpetRuleLoaded) {
-            drawRightAlignedString(this.mc.textRenderer, StringUtils.translate("carpetclient.gui.carpet_rules_not_loaded.text"), this.width - 12, 10, 0xAA0000);  // dark red
+            drawRightAlignedString(matrixStack, StringUtils.translate("carpetclient.gui.carpet_rules_not_loaded.text"), this.width - 12, 10, 0xAA0000);  // dark red
         }
         if (maxPage >= 2) {
-            this.drawStringWithShadow(String.format("%d / %d", currentPage, maxPage), this.getStringWidth(this.title) + 12 + 10 + 20 + 2 + 20 + 5, 12, COLOR_WHITE);
+            this.drawStringWithShadow(matrixStack, String.format("%d / %d", currentPage, maxPage), this.getStringWidth(this.title) + 12 + 10 + 20 + 2 + 20 + 5, 12, COLOR_WHITE);
         }
     }
 }
