@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "carpetclient",
   "version": "${version}",
-  "name": "Carpet Client",
+  "name": "CarpetClient",
   "description": "A client mod to control carpet rules easily using custom hotkeys and the GUI",
   "authors": [
     "Ivan1F"
