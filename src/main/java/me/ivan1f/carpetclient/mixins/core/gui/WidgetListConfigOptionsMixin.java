@@ -28,6 +28,9 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 import javax.annotation.Nullable;
 import java.util.Objects;
 
+/**
+ * Many thanks to @Fallen_Breath and his tweakermore
+ */
 @Mixin(WidgetConfigOption.class)
 public abstract class WidgetListConfigOptionsMixin extends WidgetConfigOptionBase<GuiConfigsBase.ConfigOptionWrapper> {
     @Shadow(remap = false)

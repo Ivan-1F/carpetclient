@@ -16,6 +16,9 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.List;
 
+/**
+ * Many thanks to @Fallen_Breath and his tweakermore
+ */
 @Mixin(WidgetLabel.class)
 public class WidgetLabelMixin extends WidgetBase {
     @Shadow(remap = false)
