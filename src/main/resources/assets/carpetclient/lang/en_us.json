@@ -9,6 +9,7 @@
   "carpetclient.hotkeys.category.main": "CarpetClient",
   "carpetclient.gui.title": "CarpetClient v%1$s Config GUI",
   "carpetclient.gui.config_category.carpet_client": "CarpetClient Settings",
+  "carpetclient.gui.config_category.all": "All",
 
   "carpetclient.gui.carpet_rules_not_loaded.text": "Carpet rules are not loaded",
 

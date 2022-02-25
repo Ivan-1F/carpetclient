@@ -42,6 +42,7 @@ public class NetworkHandler {
             NbtCompound rule = (NbtCompound) tag;
             List<String> categories = Lists.newArrayList();
             rule.getList("categories", 8).forEach(category -> categories.add(category.asString()));
+            categories.add(CarpetClientConfigs.ALL);
             CarpetRule carpetRule = new CarpetRule(
                     categories.toArray(new String[0]),
                     rule.getString("name"),
