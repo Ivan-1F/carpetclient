@@ -113,6 +113,10 @@ public class CarpetClientConfigGui extends GuiConfigsBase {
     }
 
     private int createNavigationButton(int x, int y, String category) {
+        if (category.equals(CarpetClientConfigs.ALL) && !CarpetClientConfigs.isCarpetRuleLoaded) {
+            // do not render category `all` when carpet rules are not loaded
+            return 0;
+        }
         String translatedCategory = category;
         if (category.equals(CarpetClientConfigs.CARPET_CLIENT)) {
             translatedCategory = StringUtils.translate("carpetclient.gui.config_category." + category);
