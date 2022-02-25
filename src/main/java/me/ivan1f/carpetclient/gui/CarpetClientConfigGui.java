@@ -118,7 +118,7 @@ public class CarpetClientConfigGui extends GuiConfigsBase {
             return 0;
         }
         String translatedCategory = category;
-        if (category.equals(CarpetClientConfigs.CARPET_CLIENT)) {
+        if (category.equals(CarpetClientConfigs.CARPET_CLIENT) || category.equals(CarpetClientConfigs.ALL)) {
             translatedCategory = StringUtils.translate("carpetclient.gui.config_category." + category);
         }
         ButtonGeneric button = new ButtonGeneric(x, y, -1, 20, translatedCategory);
