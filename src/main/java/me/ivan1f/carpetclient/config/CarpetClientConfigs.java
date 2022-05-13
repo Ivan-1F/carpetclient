@@ -33,6 +33,7 @@ public class CarpetClientConfigs {
             clearCarpetRules();
             NetworkHandler.requestCarpetRules();
             InfoUtils.printActionbarMessage("carpetclient.config.refreshCarpetRules.refreshed");
+            CarpetClientConfigGui.getCurrentInstance().ifPresent(CarpetClientConfigGui::reDraw);
             return true;
         });
     }
