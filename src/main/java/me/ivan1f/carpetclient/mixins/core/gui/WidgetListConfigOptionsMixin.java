@@ -28,6 +28,9 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 import javax.annotation.Nullable;
 import java.util.Objects;
 
+/**
+ * Many thanks to @Fallen_Breath and his tweakermore
+ */
 @Mixin(WidgetConfigOption.class)
 public abstract class WidgetListConfigOptionsMixin extends WidgetConfigOptionBase<GuiConfigsBase.ConfigOptionWrapper> {
     @Shadow(remap = false)
@@ -98,9 +101,9 @@ public abstract class WidgetListConfigOptionsMixin extends WidgetConfigOptionBas
         if (this.isCarpetClientConfigGui() && config instanceof IHotkey) {
             boolean modified = true;
             if (config instanceof IHotkeyTogglable) {
-                this.addBooleanAndHotkeyWidgets(x, y, configWidth, (IHotkeyTogglable) config);
+                this.addBooleanAndHotkeyWidgetsOfCarpetClient(x, y, configWidth, (IHotkeyTogglable) config);
             } else if (((IHotkey) config).getKeybind() instanceof KeybindMulti) {
-                this.addButtonAndHotkeyWidgets(x, y, configWidth, (IHotkey)config);
+                this.addButtonAndHotkeyWidgetsOfCarpetClient(x, y, configWidth, (IHotkey)config);
             } else {
                 modified = false;
             }
@@ -166,7 +169,7 @@ public abstract class WidgetListConfigOptionsMixin extends WidgetConfigOptionBas
         }
     }
 
-    private void addButtonAndHotkeyWidgets(int x, int y, int configWidth, IHotkey config) {
+    private void addButtonAndHotkeyWidgetsOfCarpetClient(int x, int y, int configWidth, IHotkey config) {
         IKeybind keybind = config.getKeybind();
 
         int triggerBtnWidth = 60;
@@ -199,7 +202,7 @@ public abstract class WidgetListConfigOptionsMixin extends WidgetConfigOptionBas
         this.addKeybindResetButton(x, y, keybind, keybindButton);
     }
 
-    private void addBooleanAndHotkeyWidgets(int x, int y, int configWidth, IHotkeyTogglable config) {
+    private void addBooleanAndHotkeyWidgetsOfCarpetClient(int x, int y, int configWidth, IHotkeyTogglable config) {
         IKeybind keybind = config.getKeybind();
 
         int booleanBtnWidth = 60;

@@ -15,6 +15,9 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.List;
 
+/**
+ * Many thanks to @Fallen_Breath and his tweakermore
+ */
 @Mixin(WidgetLabel.class)
 public class WidgetLabelMixin extends WidgetBase {
     @Shadow(remap = false)
@@ -32,7 +35,7 @@ public class WidgetLabelMixin extends WidgetBase {
         super(x, y, width, height);
     }
 
-    private boolean shouldUseTranslatedOptionLabelLogic() {
+    private boolean shouldUseTranslatedOptionLabelLogicOfCarpetClient() {
         WidgetLabel self = (WidgetLabel) (Object) this;
         return self instanceof CarpetClientOptionLabel;
     }
@@ -48,7 +51,7 @@ public class WidgetLabelMixin extends WidgetBase {
             ordinal = 4
     )
     private int translatedOptionLabelShiftyTextStart(int yTextStart) {
-        if (this.shouldUseTranslatedOptionLabelLogic()) {
+        if (this.shouldUseTranslatedOptionLabelLogicOfCarpetClient()) {
             yTextStart -= this.fontHeight * CarpetClientOptionLabel.TRANSLATION_SCALE * 0.6;
         }
         return yTextStart;
@@ -66,7 +69,7 @@ public class WidgetLabelMixin extends WidgetBase {
             locals = LocalCapture.CAPTURE_FAILHARD
     )
     private void translatedOptionLabelRenderTranslation(int mouseX, int mouseY, boolean selected, CallbackInfo ci, int fontHeight, int yCenter, int yTextStart, int i, String text) {
-        if (this.shouldUseTranslatedOptionLabelLogic()) {
+        if (this.shouldUseTranslatedOptionLabelLogicOfCarpetClient()) {
             int color = darkerColor(this.textColor);
             double scale = CarpetClientOptionLabel.TRANSLATION_SCALE;
             int x = this.x + (this.centered ? this.width / 2 : 0);
