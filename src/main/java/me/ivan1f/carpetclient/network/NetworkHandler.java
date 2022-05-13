@@ -28,6 +28,7 @@ public class NetworkHandler {
             onValueChanged(data);
         } else if (channel.getNamespace().equals(CarpetClientMod.MOD_ID)) {
             CarpetClientMod.LOGGER.warn("Receiving unknown CarpetClient packet. Maybe this version is outdated");
+        } else {
             handled = false;
         }
         return handled;
