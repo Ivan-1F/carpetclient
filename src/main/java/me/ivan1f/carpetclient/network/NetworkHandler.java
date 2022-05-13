@@ -28,6 +28,7 @@ public class NetworkHandler {
             onValueChanged(data);
         } else if (channel.getNamespace().equals(CarpetClientMod.MOD_ID)) {
             CarpetClientMod.LOGGER.warn("Receiving unknown CarpetClient packet. Maybe this version is outdated");
+        } else {
             handled = false;
         }
         return handled;
@@ -42,6 +43,7 @@ public class NetworkHandler {
             NbtCompound rule = (NbtCompound) tag;
             List<String> categories = Lists.newArrayList();
             rule.getList("categories", 8).forEach(category -> categories.add(category.asString()));
+            categories.add(CarpetClientConfigs.ALL);
             CarpetRule carpetRule = new CarpetRule(
                     categories.toArray(new String[0]),
                     rule.getString("name"),

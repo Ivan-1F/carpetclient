@@ -19,6 +19,7 @@ import java.util.stream.Stream;
 public class CarpetClientConfigs {
     public static boolean isCarpetRuleLoaded = false;
     public static final String CARPET_CLIENT = "carpet_client";
+    public static final String ALL = "all";
 
     @Config(categories = {CARPET_CLIENT})
     public static final ConfigHotkey OPEN_CARPETCLIENT_CONFIG_GUI = new CarpetClientConfigHotkey("openCarpetClientConfigGui", "R,C");
@@ -32,18 +33,19 @@ public class CarpetClientConfigs {
             clearCarpetRules();
             NetworkHandler.requestCarpetRules();
             InfoUtils.printActionbarMessage("carpetclient.config.refreshCarpetRules.refreshed");
+            CarpetClientConfigGui.getCurrentInstance().ifPresent(CarpetClientConfigGui::reDraw);
             return true;
         });
     }
 
     private static List<CarpetClientOption> OPTIONS = Lists.newArrayList();
-    private static Set<String> CATEGORIES = Sets.newHashSet(CARPET_CLIENT);
+    private static Set<String> CATEGORIES = Sets.newHashSet(CARPET_CLIENT, ALL);
     private static final Map<String, List<CarpetClientOption>> CATEGORY_TO_OPTION = Maps.newLinkedHashMap();
     private static final Map<IConfigBase, CarpetClientOption> CONFIG_TO_OPTION = Maps.newLinkedHashMap();
 
     public static void clearCarpetRules() {
         OPTIONS = OPTIONS.stream().filter(CarpetClientConfigs::isCarpetClientSetting).collect(Collectors.toList());
-        CATEGORIES = Sets.newHashSet(CARPET_CLIENT);
+        CATEGORIES = Sets.newHashSet(CARPET_CLIENT, ALL);
         CATEGORY_TO_OPTION.clear();
         OPTIONS.forEach(option -> {
             for (String category : option.getCategories()) {
